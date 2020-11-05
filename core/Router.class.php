@@ -5,18 +5,20 @@ namespace Core;
 class Router{
 
     private $routes;
+    private $pagina;
 
     public function __construct(array $routes)
     {
         $this->routes = $routes;
+        $this->pagina = $this->paginaURI();
     }
 
-    public function hasRoute()
+    public function hasRoute():string
     {
-        return array_key_exists($this->paginaURI(), $this->routes);
+        return array_key_exists($this->pagina, $this->routes);
     }
 
-    public function run($pagina)
+    public function run():void
     {
         if(isset($_GET['acao']) && !empty($_GET['acao'])){
             $acao = $_GET['acao'];
@@ -24,7 +26,7 @@ class Router{
             $acao = 'index';
         }
 
-        $class = "App\\Controllers\\" . $this->routes[$pagina];
+        $class = "App\\Controllers\\" . $this->routes[$this->pagina];
 
         if(class_exists($class)){
             
@@ -40,7 +42,7 @@ class Router{
         }
     }
 
-    private function paginaURI()
+    private function paginaURI():string
     {
         $pagina = $_SERVER['REQUEST_URI'];
 
