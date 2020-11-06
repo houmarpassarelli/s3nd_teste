@@ -14,4 +14,24 @@ class EmpresaController extends BaseController
     {
         $this->render('empresa/index');
     }
+
+    public function get()
+    {
+
+    }
+
+    public function post()
+    {
+        return json_encode([1 => 'teste']);
+    }
+
+    public function put()
+    {
+
+    }
+
+    public function deletex()
+    {
+
+    }
 }

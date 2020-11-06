@@ -14,6 +14,8 @@ define('DB','s3nd');
  */
 define('APPLICATION_PATH', realpath(dirname(__FILE__) . '/../app'));
 define('BASE_PATH', realpath(dirname('./')) . '/');
+define('DEFAULT_BASE_PATH', 'cliente');
+define('DEFAULT_API_PATH', 'api');
 
 /**
  * Constantes de HOST

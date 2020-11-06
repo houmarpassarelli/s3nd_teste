@@ -1,5 +1,3 @@
 <?php
 
-return [
-    'main' => 'system/main'
-];
+return [];

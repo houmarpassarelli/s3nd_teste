@@ -1,5 +1,6 @@
 <?php
 
 return [
-    'jquery' => 'jquery/jquery.min'
+    'cliente' => 'system/cliente',
+    'empresa' => 'system/empresa'
 ];

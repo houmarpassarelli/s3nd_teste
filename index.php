@@ -6,11 +6,17 @@ $routes = require_once('./config/routes.php');
 
 $route = new \Core\Router($routes);
 
-if($route->hasRoute()){
-    $route->run();
+$pagina = $route->paginaURI();
+
+if($pagina[0] == DEFAULT_API_PATH){
+    $route->runAPI($pagina[1]);
 }else{
-    exit('Página solicitada não existe!');
+    if($route->hasRoute()){
+        include APPLICATION_PATH . "/views/layouts/header.phtml";
+        $route->run($pagina[0]);
+        include APPLICATION_PATH . "/views/layouts/footer.phtml";
+    }else{
+        exit('Página solicitada não existe!');
+    }
 }
-
-
 
