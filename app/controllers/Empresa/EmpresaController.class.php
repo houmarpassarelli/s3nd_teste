@@ -47,17 +47,26 @@ class EmpresaController extends BaseController
 
     public function post()
     {
-        return json_encode([1 => 'teste']);
+        return json_encode($_POST);
     }
 
     public function put()
     {
-
+        return json_encode($_POST);
     }
 
     public function delete()
     {
+        $referencia = explode('/', $_SERVER['REQUEST_URI']);
+        
+        if(Empresa::deleteEmployee($referencia[3])){
 
+            Empresa::deleteEmployeeTime($referencia[3], "colaborador");
+
+            http_response_code(204);
+        }else{
+            http_response_code(501);
+        }
     }
 
     private function convertWeekDay($day)

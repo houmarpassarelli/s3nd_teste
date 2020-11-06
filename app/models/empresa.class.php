@@ -32,4 +32,22 @@ class Empresa
 
         return (new Exibir("SELECT * FROM horarios WHERE id_colaborador = '{$id}'"))->resultado();
     }
+
+    public static function deleteEmployee($id)
+    {
+        return (new Deletar("colaborador", "WHERE id = :id", "id={$id}"))->resultado();
+    }
+
+    public static function deleteEmployeeTime($id, $where = null)
+    {
+        $where_query = "WHERE id = :id";
+
+        if($where){
+            if($where == "colaborador"){
+                $where_query = "WHERE id_colaborador = :id";
+            }
+        }
+
+        return (new Deletar("horarios", "{$where_query}", "id={$id}"))->resultado();
+    }
 }

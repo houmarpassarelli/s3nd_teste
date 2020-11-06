@@ -32,6 +32,30 @@ ul{
     margin-top: 25px !important;
 }
 
+.mb-5{
+    margin-bottom: 5px !important;
+}
+
+.mb-10{
+    margin-bottom: 10px !important;
+}
+
+.mb-15{
+    margin-bottom: 15px !important;
+}
+
+.mb-20{
+    margin-bottom: 20px !important;
+}
+
+.mb-25{
+    margin-bottom: 25px !important;
+}
+
+.link{
+    cursor: pointer;
+}
+
 div#top_nav_bar{
     padding-left: 15%;
 }
