@@ -2,9 +2,11 @@
 
 namespace Core;
 
+
 use PDO;
 use PDOStatement;
 use PDOException;
+use Core\Conexao;
 
 /**
  * Class Exibir
@@ -52,7 +54,7 @@ class Exibir extends Conexao
      * @param null|string $coluna Em casi de não manual, pode ser usado para passar uma coluna específica
      * que queira retornar
      */
-    public function exeExibir(string $manual = null, string $tabela = null, string $condicoes = null, string $parseString = null, bool $fetchOBJ = null, string $coluna = null)
+    public function __construct(string $manual = null, string $tabela = null, string $condicoes = null, string $parseString = null, bool $fetchOBJ = null, string $coluna = null)
     {
 
         $this->manual = $manual ?? null;

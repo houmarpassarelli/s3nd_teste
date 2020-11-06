@@ -54,6 +54,7 @@ class Router{
             $controller = new $class;
 
             if(method_exists($controller, $method)){
+                header('Content-Type: application/json');
                 print $controller->$method();
             }else{
                 http_response_code(404);

@@ -4,9 +4,9 @@
  * Configurações do banco de dados
  */
 
-define('USER','');
-define('PWD','');
-define('HOST','');
+define('USER','houmar');
+define('PWD','houmar');
+define('HOST','localhost');
 define('DB','s3nd');
 
 /**

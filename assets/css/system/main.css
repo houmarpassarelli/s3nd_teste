@@ -6,6 +6,32 @@ h4.page-title{
     margin: 12px 0;
 }
 
+ul{
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+
+.mt-5{
+    margin-top: 5px !important;
+}
+
+.mt-10{
+    margin-top: 10px !important;
+}
+
+.mt-15{
+    margin-top: 15px !important;
+}
+
+.mt-20{
+    margin-top: 20px !important;
+}
+
+.mt-25{
+    margin-top: 25px !important;
+}
+
 div#top_nav_bar{
     padding-left: 15%;
 }

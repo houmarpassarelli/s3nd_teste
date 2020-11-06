@@ -2,7 +2,7 @@ new Vue({
     el: '#empresa',
     data: {
         employees : null,
-        api : window.location.origin + '/empresa/'
+        api : window.location.origin + '/api/empresa/'
     },
     beforeCreate(){
         
@@ -14,15 +14,16 @@ new Vue({
         
     },
     mounted(){
-        // this.getEmployees();
-        this.putEmployees();
+        this.getEmployees();
+        // this.putEmployees();
     },
     methods:{
         async getEmployees(){
 
-            const response = await fetch('https://api.coindesk.com/v1/bpi/currentprice.json');
-            this.employees = await response.json();
-
+            await fetch(this.api)
+                    .then(response => response.json())
+                    .then(data => {this.employees = data});
+                    
             await loading(false);
         },
         async putEmployees(){
