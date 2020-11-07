@@ -47,12 +47,36 @@ class EmpresaController extends BaseController
 
     public function post()
     {
-        return json_encode($_POST);
-    }
+        $referencia = explode('/', $_SERVER['REQUEST_URI']);
+        $post = $_POST;
+        
+        $colaborador = [];
+        $horarios = [];
 
-    public function put()
-    {
-        return json_encode($_POST);
+        foreach($post as $key => $value){
+            
+            if($key == 'nome'){
+                $colaborador['nome'] = $value;
+            }
+
+            if(is_array($value)){
+                $horarios[$this->translateArrayKey($key)] = $value;
+            }
+        }
+
+        if($post['request'] == "update"){
+
+            if(Empresa::deleteEmployeeTime($referencia[3], "colaborador")){
+                Empresa::updateEmployee(['id' => $referencia[3], 'data' => $colaborador]);
+                Empresa::createEmployeeTime(['id' => $referencia[3], 'data' => $horarios]);
+            }else{
+                http_response_code(501);
+            }
+        }
+
+        if($post['request'] == "insert"){
+
+        }
     }
 
     public function delete()
@@ -84,10 +108,23 @@ class EmpresaController extends BaseController
         return $valid[$day];
     }
 
+    private function translateArrayKey($key)
+    {
+        $key = str_replace('á', 'a', $key);
+        $key = str_replace('ç', 'c', $key);
+
+        $key = explode('-', $key);
+        $key = $key[0];
+        
+        return $key;        
+    }
+
     private function convertTime($time)
     {
         if(is_null($time)){
             return '00:00';
+        }else{
+            return date('H:i', strtotime($time));
         }
     }
 }

@@ -2,7 +2,8 @@ new Vue({
     el: '#empresa',
     data: {
         employees : null,
-        edit_show : [],        
+        edit_show : [],
+        weekdays : ['Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado'],     
         api : window.location.origin + '/api/empresa/'
     },
     beforeCreate(){
@@ -52,14 +53,27 @@ new Vue({
 
             await loading(false);
         },
-        async updateEmployees(e, id){
-            
+        async updateEmployees(e, id, index){
+
             let data = new FormData(document.getElementById(e.target.id));
 
             data.append("request","update");
 
-            axios.post(this.api + id, data)
-            .then(response => { console.log(response) });
+            axios.post(this.api + id, data, {
+                headers: {
+                    'Content-Type': 'application/json;charset=UTF-8'
+                }
+            })
+            .then((response) => { 
+                if(response.status == 204){
+                    this.getEmployees();
+                }
+            });
+
+            this.$set(this.edit_show, index, !this.edit_show[index]);
+        },
+        collapse(id, effect){
+            $('#colaborador' + id).collapse(effect);
         }
     }
 });

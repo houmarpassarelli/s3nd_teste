@@ -33,11 +33,52 @@ class Empresa
         return (new Exibir("SELECT * FROM horarios WHERE id_colaborador = '{$id}'"))->resultado();
     }
 
+    /**
+     * Cria horários para um colaborador
+     * específico
+     * 
+     * @param array $data
+     * @return void
+     */
+    public static function createEmployeeTime(array $data)
+    {
+        foreach($data['data'] as $key => $value){
+            (new Inserir("horarios", array_merge(['id_colaborador' => $data['id']], ['dia_semana' => $key], $value)));
+        }
+    }
+
+    /**
+     * Altera informações do colaborador
+     * conforme id
+     * 
+     * @param array $data
+     * @return void
+     */
+    public static function updateEmployee(array $data)
+    {
+        (new Alterar(NULL, "colaborador", $data['data'], "WHERE id = :id","id={$data['id']}"));
+    }
+
+    /**
+     * Apaga informação da tabela colaborador
+     * conforme id
+     * 
+     * @param int $id
+     * @return boolean
+     */
     public static function deleteEmployee($id)
     {
         return (new Deletar("colaborador", "WHERE id = :id", "id={$id}"))->resultado();
     }
 
+    /**
+     * Apaga horário de colaborador conforme
+     * id
+     * 
+     * @param int $id
+     * @param string $where
+     * @return boolean
+     */
     public static function deleteEmployeeTime($id, $where = null)
     {
         $where_query = "WHERE id = :id";

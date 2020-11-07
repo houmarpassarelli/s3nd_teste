@@ -3,10 +3,10 @@
     <div class="panel shadow-sm border">
         <div class="row">
             <div class="col-sm-12 col-md-6">
-                <button class="btn btn-sm btn-success mb-10">Adicionar colaborador</button>                
+                <button class="btn btn-sm btn-success mb-10" data-toggle="modal" data-target="#addmodal">Adicionar colaborador</button>                
                 <ul class="list-group">
                     <li class="list-group-item" v-for="(colaborador, index) in employees">
-                        <form :id="`form-${index}`" @submit.prevent="updateEmployees(event, `${colaborador.id}`)">
+                        <form :id="`form-${index}`" @submit.prevent="updateEmployees(event, colaborador.id, index)">
                             <div class="row">
                                 <div class="col-9">
                                     <h5>
@@ -36,28 +36,28 @@
                                             <div class="col-12">
                                                 <div class="row">
                                                     <div class="col">
-                                                        <small>Hora Inicio</small>
+                                                        <small><strong>Hora Inicio</strong></small>
                                                         <div v-show="!edit_show[index]">{{ expediente.hora_inicial }}</div>
-                                                        <input type="time" class="form-control" :value="expediente.hora_inicial" v-show="edit_show[index]" />
+                                                        <input type="time" :name="`${expediente.dia_semana.toLowerCase()}[hora_inicial]`" class="form-control" :value="expediente.hora_inicial" v-show="edit_show[index]" />
                                                     </div>
                                                     <div class="col">
-                                                        <small>Intervalo Inicio</small>
+                                                        <small><strong>Intervalo Inicio</strong></small>
                                                         <div v-show="!edit_show[index]">{{ expediente.intervalo_inicial }}</div>
-                                                        <input type="time" class="form-control" :value="expediente.intervalo_inicial" v-show="edit_show[index]" />
+                                                        <input type="time" :name="`${expediente.dia_semana.toLowerCase()}[intervalo_inicial]`" class="form-control" :value="expediente.intervalo_inicial" v-show="edit_show[index]" />
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="col-12">
                                                 <div class="row">
                                                     <div class="col">
-                                                        <small>Intervalo Fim</small>
+                                                        <small><strong>Intervalo Fim</strong></small>
                                                         <div v-show="!edit_show[index]">{{ expediente.intervalo_final }}</div>
-                                                        <input type="time" class="form-control" :value="expediente.intervalo_final" v-show="edit_show[index]" />
+                                                        <input type="time" :name="`${expediente.dia_semana.toLowerCase()}[intervalo_final]`" class="form-control" :value="expediente.intervalo_final" v-show="edit_show[index]" />
                                                     </div>
                                                     <div class="col">
-                                                        <small>Hora Fim</small>
+                                                        <small><strong>Hora Fim</strong></small>
                                                         <div v-show="!edit_show[index]">{{ expediente.hora_final }}</div>
-                                                        <input type="time" class="form-control" :value="expediente.hora_final" v-show="edit_show[index]" />
+                                                        <input type="time" :name="`${expediente.dia_semana.toLowerCase()}[hora_final]`" class="form-control" :value="expediente.hora_final" v-show="edit_show[index]" />
                                                     </div>
                                                 </div>
                                             </div>
@@ -77,6 +77,9 @@
             </div>
         </div>
     </div>
+    <?php
+        $this->partial('empresa/_adicionar');
+    ?>
 </div>
 <?php
     requer(['empresa']);
