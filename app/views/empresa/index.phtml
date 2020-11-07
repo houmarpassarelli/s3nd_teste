@@ -2,31 +2,45 @@
     <h3 class="page-title">Painel da Empresa</h3>
     <div class="panel shadow-sm border">
         <div class="row">
-            <div class="col-sm-12 col-md-6">
-                <button class="btn btn-sm btn-success mb-10" data-toggle="modal" data-target="#addmodal">Adicionar colaborador</button>                
+            <div class="col-sm-12 col-md-8">
+                <button class="btn btn-sm btn-success mb-10" data-toggle="modal" data-target="#addmodal">
+                    <i class="fas fa-plus"></i>
+                    Adicionar colaborador
+                </button>                
                 <ul class="list-group">
                     <li class="list-group-item" v-for="(colaborador, index) in employees">
                         <form :id="`form-${index}`" @submit.prevent="updateEmployees(event, colaborador.id, index)">
                             <div class="row">
-                                <div class="col-9">
+                                <div class="col-10">
                                     <h5>
                                         <strong v-show="!edit_show[index]">{{ colaborador.nome }}</strong>
                                         <input type="text" name="nome" class="form-control" :value="colaborador.nome" v-show="edit_show[index]" />
                                     </h5>
                                 </div>
-                                <div class="col-3">
-                                    <a data-toggle="collapse" :href="`#colaborador${index}`" role="button" aria-expanded="false" :aria-controls="`colaborador${index}`">Detalhes</a>
+                                <div class="col-2">
+                                    <a data-toggle="collapse" :href="`#colaborador${index}`" role="button" aria-expanded="false" :aria-controls="`colaborador${index}`">
+                                        Detalhes
+                                        <i class="fas fa-angle-double-down"></i>
+                                    </a>
                                 </div>
                             </div>
                             <div class="collapse" :id="`colaborador${index}`">
                                 <a @click="$set(edit_show, index, !edit_show[index])" v-show="!edit_show[index]" class="badge badge-info link">
+                                    <i class="far fa-edit"></i>
                                     Editar
                                 </a>
-                                <a @click="delEmployees(colaborador.id)" v-show="!edit_show[index]" class="badge badge-danger link">Excluir</a>
+                                <a @click="delEmployees(colaborador.id)" v-show="!edit_show[index]" class="badge badge-danger link">
+                                    <i class="fas fa-trash"></i>
+                                    Excluir
+                                </a>
                                 <a @click="$set(edit_show, index, !edit_show[index])" v-show="edit_show[index]" class="badge badge-danger link">
+                                    <i class="fas fa-times"></i>
                                     Cancelar Edição
                                 </a>
-                                <button type="submit" v-show="edit_show[index]" class="btn badge badge-success link">Salvar Edição</button>
+                                <button type="submit" v-show="edit_show[index]" class="btn badge badge-success link">
+                                    <i class="fas fa-check"></i>
+                                    Salvar Edição
+                                </button>
                                 <ul>
                                     <li v-for="expediente in colaborador.time" class="mt-10">                                
                                         <span class="text-info">
@@ -73,10 +87,22 @@
                     </li>
                 </ul>
             </div>
-        </div>
-        <div class="row">
-            <div class="col-sm-12 col-md-6">
-
+            <div class="col-sm-12 col-md-4">
+                <h4>
+                    Expediente de Atendimento
+                </h4>
+                <ul>
+                    <li v-for="expediente in expedient">
+                        <span class="text-info">
+                            <strong>{{ expediente.dia_semana }}</strong>
+                        </span>
+                        <div class="row">
+                            <div class="col-12">                                
+                                {{expediente.hora_inicial}} às {{expediente.hora_final}}
+                            </div>
+                        </div>
+                    </li>
+                </ul>
             </div>
         </div>
     </div>

@@ -124,6 +124,58 @@ class EmpresaController extends BaseController
     }
 
     /**
+     * Faz o tratamento do dados referentes
+     * aos horários agrupados conforme os
+     * horários dos colaboradores pré definidos
+     * 
+     * @return object
+     */
+    public function setOfficeExpedient()
+    {
+        $horarios = Empresa::getOfficeExpedient();
+        
+        $pos = null;
+        $dia_semana = [];
+        $result = [];
+        $parsed = [];
+        
+        foreach($horarios as $key => $value){
+
+            if(in_array($value['dia_semana'], $dia_semana)){
+                
+                $pos = array_search($value['dia_semana'] , array_column($result, 'dia_semana'));
+
+                if(strtotime($value['hora_inicial']) < strtotime($result[$pos]['hora_inicial'])){                    
+                    $result[$pos]['hora_inicial'] = $value['hora_inicial'];
+                }else{                    
+                    $value['hora_inicial'] = $result[$pos]['hora_inicial'];
+                }
+
+                if(strtotime($value['hora_final']) > strtotime($result[$pos]['hora_final'])){
+                    $result[$pos]['hora_final'] = $value['hora_final'];
+                }else{
+                    $value['hora_final'] = $result[$pos]['hora_final'];
+                }
+
+            }
+
+            $dia_semana[] = $value['dia_semana'];
+            $result[$key] =  $value;
+        }        
+
+        $result = array_map("unserialize", array_unique(array_map("serialize", $result)));
+        $result = array_values($result);
+
+        //Converte os índices do dia da semana de simples para completos
+        foreach($result as $item){
+            $item['dia_semana'] = $this->convertWeekDay($item['dia_semana']);
+            $parsed[] = $item;
+        }
+        
+        return json_encode($parsed);
+    }
+
+    /**
      * Transmuta dia da semana de forma
      * mais completa
      * 

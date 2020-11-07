@@ -102,4 +102,29 @@ class Empresa
 
         return (new Deletar("horarios", "{$where_query}", "id={$id}"))->resultado();
     }
+
+    /**
+     * Traz grupo de expediente conforme
+     * todos os horários dos colaboradores
+     * pré estabelecidos
+     * 
+     * @return array
+     */
+    public function getOfficeExpedient()
+    {
+        $sql = "SELECT dia_semana, hora_inicial, hora_final FROM horarios
+                GROUP BY dia_semana, hora_inicial, hora_final
+                HAVING MAX(hora_inicial) AND MAX(hora_final)
+                ORDER BY (CASE 
+                            WHEN dia_semana = 'domingo' THEN 1 
+                            WHEN dia_semana = 'segunda' THEN 2
+                            WHEN dia_semana = 'terca' THEN 3
+                            WHEN dia_semana = 'quarta' THEN 4
+                            WHEN dia_semana = 'quinta' THEN 5
+                            WHEN dia_semana = 'sexta' THEN 6
+                            WHEN dia_semana = 'sabado' THEN 7
+                        END) ASC";
+        
+        return (new Exibir($sql))->resultado();
+    }
 }

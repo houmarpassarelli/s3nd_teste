@@ -48,8 +48,14 @@
                     </ul>                
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-success">Cadastrar</button>
-                    <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-check"></i>
+                        Cadastrar
+                    </button>
+                    <button type="button" @click="resetForm" class="btn btn-danger" data-dismiss="modal">
+                        <i class="fas fa-times"></i>
+                        Cancelar
+                    </button>
                 </div>
             </form>
         </div>

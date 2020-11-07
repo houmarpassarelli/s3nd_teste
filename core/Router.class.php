@@ -47,6 +47,10 @@ class Router{
     {        
         $method = strtolower($_SERVER['REQUEST_METHOD']);
 
+        if(isset($_GET['acao']) && !empty($_GET['acao'])){
+            $method = $_GET['acao'];
+        }
+
         $class = "App\\Controllers\\" . $this->routes[$pagina];
 
         if(class_exists($class)){
