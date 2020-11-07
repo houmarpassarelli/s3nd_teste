@@ -16,6 +16,12 @@ class EmpresaController extends BaseController
         $this->render('empresa/index');
     }
 
+    /**
+     * Faz fetch os colaboradores na tabela
+     * colaborador
+     * 
+     * @return object
+     */
     public function get()
     {
         $employees = Empresa::getEmployees();
@@ -45,6 +51,12 @@ class EmpresaController extends BaseController
         return json_encode($response);
     }
 
+    /**
+     * Faz post de colcaborador e seus 
+     * horários
+     * 
+     * @return void
+     */
     public function post()
     {
         $referencia = explode('/', $_SERVER['REQUEST_URI']);
@@ -67,8 +79,12 @@ class EmpresaController extends BaseController
         if($post['request'] == "update"){
 
             if(Empresa::deleteEmployeeTime($referencia[3], "colaborador")){
-                Empresa::updateEmployee(['id' => $referencia[3], 'data' => $colaborador]);
-                Empresa::createEmployeeTime(['id' => $referencia[3], 'data' => $horarios]);
+                if(Empresa::updateEmployee(['id' => $referencia[3], 'data' => $colaborador])){
+                    Empresa::createEmployeeTime(['id' => $referencia[3], 'data' => $horarios]);
+                    http_response_code(204);
+                }else{
+                    http_response_code(501);
+                }                
             }else{
                 http_response_code(501);
             }
@@ -76,9 +92,23 @@ class EmpresaController extends BaseController
 
         if($post['request'] == "insert"){
 
+            $id = Empresa::createEmployee($colaborador);
+
+            if($id){
+                Empresa::createEmployeeTime(['id' => $id, 'data' => $horarios]);
+                http_response_code(204);
+            }else{
+                http_response_code(501);    
+            }
         }
     }
 
+    /**
+     * Faz exclusão do colaborador e 
+     * seus horários
+     * 
+     * @return void
+     */
     public function delete()
     {
         $referencia = explode('/', $_SERVER['REQUEST_URI']);
@@ -93,6 +123,12 @@ class EmpresaController extends BaseController
         }
     }
 
+    /**
+     * Transmuta dia da semana de forma
+     * mais completa
+     * 
+     * @return string
+     */
     private function convertWeekDay($day)
     {
         $valid = [
@@ -108,6 +144,12 @@ class EmpresaController extends BaseController
         return $valid[$day];
     }
 
+    /**
+     * Transmuta a chave do array para
+     * que possa persistido depois
+     * 
+     * @return string
+     */
     private function translateArrayKey($key)
     {
         $key = str_replace('á', 'a', $key);
@@ -119,6 +161,12 @@ class EmpresaController extends BaseController
         return $key;        
     }
 
+    /**
+     * Faz tratamento do horário em duas
+     * possibilidades
+     * 
+     * @return string
+     */
     private function convertTime($time)
     {
         if(is_null($time)){

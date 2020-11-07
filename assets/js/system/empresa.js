@@ -6,18 +6,6 @@ new Vue({
         weekdays : ['Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado'],     
         api : window.location.origin + '/api/empresa/'
     },
-    beforeCreate(){
-        
-    },
-    beforeUpdate(){
-        
-    },    
-    beforeMount(){
-        
-    },
-    updated(){
-        
-    },
     mounted(){
         this.getEmployees();
     },
@@ -26,54 +14,92 @@ new Vue({
 
             loading();
 
-            const request = new Request(this.api + id, {
-                method: "DELETE"
-            });
+            const response = await axios.delete(this.api + id).then(response => response);
 
-            await fetch(request).then((response) => {
-                if(response.status == 204){
-                    this.getEmployees();
-                }
-            });
+            if(response.status == 204){
+                await this.getEmployees();
+                this.collapse('all', 'hide');
+                loading(false);
+            }
         },
         async getEmployees(){
 
-            loading();
+            loading(true);
 
-            await fetch(this.api)
-                    .then(response => response.json())
-                    .then(data => {this.employees = data});
-
-            let length = 0;
+            const response = await axios.get(this.api).then(response => response);
             
-            while(length < this.employees.length){
-                this.edit_show.push(false);    
-                length++;
+            if(response.data.length > 0){
+
+                this.employees = response.data;
+
+                let length = 0;
+            
+                while(length < this.employees.length){
+                    this.edit_show.push(false);    
+                    length++;
+                }
             }
 
             await loading(false);
         },
+        async createEmployee(e){
+
+            loading(true, true);
+
+            let form = document.getElementById(e.target.id);
+            let data = new FormData(form);
+
+            data.append("request", "insert");
+
+            let config = {
+                    headers: {
+                        'Content-Type': 'application/json;charset=UTF-8'
+                    }
+                };
+
+            const response = await axios.post(this.api, data, config).then(response => response);
+
+            if(response.status == 204){
+                this.getEmployees();
+                $('#addmodal').modal('hide');
+                form.reset();
+                loading(false);
+            }
+        },
         async updateEmployees(e, id, index){
+
+            loading(true);
 
             let data = new FormData(document.getElementById(e.target.id));
 
             data.append("request","update");
 
-            axios.post(this.api + id, data, {
-                headers: {
-                    'Content-Type': 'application/json;charset=UTF-8'
-                }
-            })
-            .then((response) => { 
-                if(response.status == 204){
-                    this.getEmployees();
-                }
-            });
+            let config = {
+                    headers: {
+                        'Content-Type': 'application/json;charset=UTF-8'
+                    }
+                };
 
-            this.$set(this.edit_show, index, !this.edit_show[index]);
+            const response = await axios.post(this.api + id, data, config).then(response => response);
+            
+            if(response.status == 204){
+                this.getEmployees();
+                this.$set(this.edit_show, index, !this.edit_show[index]);
+                loading(false);
+            }
         },
         collapse(id, effect){
-            $('#colaborador' + id).collapse(effect);
+            if(id == 'all'){
+                
+                let length = 0;
+
+                while(length < this.employees.length){
+                    $('#colaborador' + length).collapse(effect);    
+                    length++;
+                }
+            }else{
+                $('#colaborador' + id).collapse(effect);
+            }
         }
     }
 });

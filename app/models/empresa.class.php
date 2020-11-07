@@ -34,6 +34,17 @@ class Empresa
     }
 
     /**
+     * Cria informação na tabela colaborador
+     * 
+     * @param array $dados
+     * @return int
+     */
+    public static function createEmployee(array $dados)
+    {
+        return (new Inserir("colaborador", $dados))->resultado();
+    }
+
+    /**
      * Cria horários para um colaborador
      * específico
      * 
@@ -56,7 +67,7 @@ class Empresa
      */
     public static function updateEmployee(array $data)
     {
-        (new Alterar(NULL, "colaborador", $data['data'], "WHERE id = :id","id={$data['id']}"));
+        return (new Alterar(NULL, "colaborador", $data['data'], "WHERE id = :id","id={$data['id']}"));
     }
 
     /**
