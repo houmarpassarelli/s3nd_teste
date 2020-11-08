@@ -2,5 +2,6 @@
 
 return [
     'empresa' => "Empresa\EmpresaController",
-    'cliente' => "Cliente\ClienteController"
+    'cliente' => "Cliente\ClienteController",
+    'loja' => "Loja\LojaController"
 ];

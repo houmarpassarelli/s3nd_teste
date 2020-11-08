@@ -2,5 +2,6 @@
 
 return [
     'cliente' => 'system/cliente',
-    'empresa' => 'system/empresa'
+    'empresa' => 'system/empresa',
+    'loja' => 'system/loja'
 ];
