@@ -33,7 +33,7 @@ new Vue({
             if(response.data.length > 0){
 
                 this.employees = response.data;
-
+                
                 let length = 0;
             
                 while(length < this.employees.length){

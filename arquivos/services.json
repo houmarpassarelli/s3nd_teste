@@ -1,0 +1,31 @@
+[{
+    "titulo": "Whatsapp",
+    "icone" : "fab fa-whatsapp",
+    "descricao": "Automatize seus atendimentos com o uso da inteligencia artificial na troca de mensagens."
+  },
+  {
+      "titulo": "Messenger",
+      "icone" : "fab fa-facebook-messenger",
+      "descricao": "Faça controle das mensagens e deixe a inteligência artificial cuidar do atendimento.."
+  },
+   {
+      "titulo": "Email",
+      "icone" : "far fa-envelope",
+      "descricao": "Suba sua base de clientes e tenha como disparar, segmentar e higienizar todas as suas listas."
+  },
+   {
+      "titulo": "Voz",
+      "icone" : "fas fa-phone-volume",
+      "descricao": "Envie mensagens em MP3 para clientes com promoções e informativos importantes."
+  },
+   {
+      "titulo": "SMS",
+      "icone" : "fas fa-sms",
+      "descricao": "Envie mensagens de texto com links promocionais e toda comunicação rápida no celular dos seus clientes."
+  },
+   {
+      "titulo": "WebChat",
+      "icone" : "far fa-comments",
+      "descricao": "Automatize o atendimento do seu site com inteligência artificial para tirar dúvidas e fechar vendas."
+  }
+]

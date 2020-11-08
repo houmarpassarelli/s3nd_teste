@@ -1,5 +1,23 @@
-<div class="container" id="#loja">
-    
+<div class="container mt-35" id="loja">
+    <div class="col-12">
+        <div class="row">
+            <div class="col-sm-12 col-md-6 col-lg-4 mt-15" v-for="servicos in services">
+                <div class="card shadow border-white services-card">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <span class="icon-wrap">
+                                <i :class="servicos.icone"></i>
+                            </span>
+                            <span class="title-wrap">
+                                {{ servicos.titulo }}                            
+                            </span>
+                        </h5>
+                        <p class="card-text mt-15">{{ servicos.descricao }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 <?php
     requer(['loja']);
