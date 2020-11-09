@@ -24,11 +24,11 @@ class ClienteController extends BaseController
         
         $usuarios = Cliente::getall();
         $expediente = distinctdateweek(Empresa::getOfficeExpedient());
-        // exit(var_dump($usuarios));
+        
         foreach($usuarios as $key => $value){
             
-            // $value['entrada'] = '2020-11-07 06:25:00';            
-            // $value['ultimo_registro'] = '2020-11-08 06:50';
+            $value['entrada'] = '2020-11-07 06:25:00';            
+            $value['ultimo_registro'] = '2020-11-08 19:30';
 
             $pos_de = array_search($this->convertweekday($value['entrada']), array_column($expediente, 'dia_semana'));
             $pos_ds = array_search($this->convertweekday($value['ultimo_registro']), array_column($expediente, 'dia_semana'));
@@ -43,8 +43,6 @@ class ClienteController extends BaseController
             $hora_entrada = date('H:i', strtotime($value['entrada']));
             $hora_saida = date('H:i', strtotime($value['ultimo_registro']));
 
-            // $data_hoje = date('Y-m-d');
-            // $hora_agora = date('H:i');
             $hora_inicial_de = $expediente[$pos_de]['hora_inicial'];            
             $hora_final_de = $expediente[$pos_de]['hora_final'];
             $hora_inicial_ds = $expediente[$pos_ds]['hora_inicial'];            
@@ -74,146 +72,141 @@ class ClienteController extends BaseController
                     }
                 }
             }else{
-                $data_inicial_de = new \DateTime("{$data_entrada} {$hora_inicial_de}");
-                $data_final_de = new \DateTime("{$data_entrada} {$hora_final_de}");
-                $data_inicial_ds = new \DateTime("{$data_saida} {$hora_inicial_ds}");
-                $data_final_ds = new \DateTime("{$data_saida} {$hora_final_ds}");
+
                 $usuario_entrada = new \DateTime($value['entrada']);
-
-                $tempo_diff_de = $data_inicial_de->diff($data_final_de);
-                $tempo_diff_ds = $data_inicial_ds->diff($data_final_ds);
-
-                // $tempo_usuario_in_ds = 0;
-                // $tempo_usuario_in_de = 0;
-                $tempo_usuario_out_de = 0;
-                $tempo_usuario_out_ds = 0;                
+                $usuario_saida = new \DateTime($value['ultimo_registro']); 
                 
-                // if(("{$data_entrada} 00:00" < $value['entrada']) && 
-                //     ($value['entrada'] < "{$data_entrada} {$hora_inicial_de}")){ 
+                $tempo_24h = (24 * 60);
 
-                //     $lacuna_pi_out_de = new \DateTime("{$data_entrada} 00:00");
-                //     $lacuna_pf_out_de = new \DateTime("{$data_entrada} {$hora_inicial_de}");
-                    
-                //     $lacuna_pi_diff_de = $lacuna_pi_out_de->diff($lacuna_pf_out_de);
+                if($pos_de !== false){
 
-                //     $tempo_24h_pi_diff_de = ((24 - intval(round((($lacuna_pi_diff_de->h * 60) + $lacuna_pi_diff_de->i) / 60))) / 2);                    
-                    
-                //     $usuario_pi_diff_de = $usuario_entrada->diff($lacuna_pf_out_de);
-                    
-                //     $usuario_pi_time_de = round((($usuario_pi_diff_de->h * 60) + $usuario_pi_diff_de->i));
+                    $data_inicial_de = new \DateTime("{$data_entrada} {$hora_inicial_de}");
+                    $data_final_de = new \DateTime("{$data_entrada} {$hora_final_de}");
 
-                //     $tempo_usuario_out_de += $usuario_pi_time_de;
+                    $tempo_atendimento_diff_de = $data_inicial_de->diff($data_final_de);
 
-                // }
+                    $tempo_atendimento_de = (($tempo_atendimento_diff_de->h * 60) + $tempo_atendimento_diff_de->i);
 
-                if($pos_de){
-                // if($value['entrada'] < "{$data_entrada} {$hora_inicial_de}"){ 
-                    $lacuna_pi_out_de = new \DateTime("{$data_entrada} 00:00");
-                    $lacuna_pf_out_de = new \DateTime("{$data_entrada} {$hora_inicial_de}");
-                    
-                    $lacuna_pi_diff_de = $lacuna_pi_out_de->diff($lacuna_pf_out_de);
+                    if($value['entrada'] < "{$data_entrada} {$hora_inicial_de}"){
 
-                    $tempo_24h_pi_diff_de = ((24 - intval(round((($lacuna_pi_diff_de->h * 60) + $lacuna_pi_diff_de->i) / 60))) / 2);                    
-                    
-                    $usuario_pi_diff_de = $usuario_entrada->diff($lacuna_pf_out_de);
-                    
-                    $usuario_pi_time_de = round((($usuario_pi_diff_de->h * 60) + $usuario_pi_diff_de->i));
+                        //Parte Inicial
+                        $lacuna_pi_out_de = new \DateTime("{$data_entrada} 00:00");
+                        $lacuna_pf_out_de = new \DateTime("{$data_entrada} {$hora_inicial_de}");
+                        
+                        $lacuna_pi_diff_de = $lacuna_pi_out_de->diff($lacuna_pf_out_de);
 
-                    $tempo_usuario_out_de += $usuario_pi_time_de;
+                        $tempo_24h_pi_diff_de = ((24 - intval(round((($lacuna_pi_diff_de->h * 60) + $lacuna_pi_diff_de->i) / 60))) / 2);                    
+                        
+                        $usuario_pi_diff_de = $usuario_entrada->diff($lacuna_pf_out_de);
+                        
+                        $usuario_pi_time_de = round((($usuario_pi_diff_de->h * 60) + $usuario_pi_diff_de->i));
+                        
+                        $tempo_usuario_out += $usuario_pi_time_de;
 
-                    $lacuna_pi_out_ds = new \DateTime("{$data_saida} 00:00");
-                    $lacuna_pf_out_ds = new \DateTime("{$data_saida} {$hora_inicial_ds}");
-                    
-                    $lacuna_pi_diff_ds = $lacuna_pi_out_ds->diff($lacuna_pf_out_ds);
+                        //Parte Final
+                        $lacuna_si_out_de = new \DateTime("{$data_entrada} 23:59");
+                        $lacuna_sf_out_de = new \DateTime("{$data_entrada} {$hora_final_de}");
+                        
+                        $lacuna_sf_diff_de = $lacuna_si_out_de->diff($lacuna_sf_out_de);
+                        
+                        $usuario_sf_time_de = round((($lacuna_sf_diff_de->h * 60) + $lacuna_sf_diff_de->i));
+                        
+                        $tempo_usuario_out += $usuario_sf_time_de;
 
-                    $tempo_24h_pi_diff_ds = ((24 - intval(round((($lacuna_pi_diff_ds->h * 60) + $lacuna_pi_diff_ds->i) / 60))) / 2);                    
-                    
-                    $usuario_pi_diff_ds = $usuario_entrada->diff($lacuna_pf_out_ds);
-                    
-                    $usuario_pi_time_ds = round((($usuario_pi_diff_ds->h * 60) + $usuario_pi_diff_ds->i));
-
-                    $tempo_usuario_out_ds += $usuario_pi_time_ds;
-
-                // }
-
-                // if(($hora_entrada >= $hora_inicial_de) && ($hora_entrada <= $hora_final_de)){
-                //     if($data_usuario_diff->h == 0){
-                //         $tempo_usuario_in_de = $data_usuario_diff->i;
-                //     }else{
-                //         $tempo_usuario_in_de = round((($data_usuario_diff->h * 60) + $data_usuario_diff->i));
-                //     }
-                // }
-
-                if(($value['entrada'] > "{$data_entrada} {$hora_final_de}") && 
-                    ("{$data_entrada} 23:59" > $value['entrada'])){
-
-                    $lacuna_si_out_de = new \DateTime("{$data_entrada} 23:59");
-                    $lacuna_sf_out_de = new \DateTime("{$data_entrada} {$hora_final_de}");
-                    
-                    $lacuna_sf_diff_de = $lacuna_si_out_de->diff($lacuna_sf_out_de);
-
-                    $tempo_24h_sf_diff_de = ((24 - intval(floor((($lacuna_sf_diff_de->h * 60) + $lacuna_sf_diff_de->i) / 60))) / 2);
-                    
-                    $usuario_pi_diff_de = $usuario_entrada->diff($lacuna_sf_out_de);
-                    
-                    $usuario_pi_time_de = round((($usuario_pi_diff_de->h * 60) + $usuario_pi_diff_de->i));
-                    
-                    $tempo_usuario_out_de += $usuario_pi_time_de;
-                }
-
-                if((("{$data_saida} 00:00" < $value['ultimo_registro']) && 
-                    ($value['ultimo_registro'] < "{$data_saida} {$hora_inicial_ds}")) ||
-                    (($value['ultimo_registro'] > "{$data_saida} {$hora_inicial_ds}") &&
-                        ($value['ultimo_registro'] <= "{$data_saida} {$hora_final_ds}"))){
-                    
-                    $lacuna_pi_out_ds = new \DateTime("{$data_saida} 00:00");
-                    $lacuna_pf_out_ds = new \DateTime("{$data_saida} {$hora_inicial_ds}");
-                    
-                    $lacuna_pi_diff_ds = $lacuna_pi_out_ds->diff($lacuna_pf_out_ds);
-
-                    $tempo_24h_pi_diff_ds = ((24 - intval(round((($lacuna_pi_diff_ds->h * 60) + $lacuna_pi_diff_ds->i) / 60))) / 2);                    
-                    
-                    $usuario_pi_diff_ds = $usuario_entrada->diff($lacuna_pf_out_ds);
-                    
-                    $usuario_pi_time_ds = round((($usuario_pi_diff_ds->h * 60) + $usuario_pi_diff_ds->i));
-
-                    $tempo_usuario_out_ds += $usuario_pi_time_ds;
-                }                
-
-                if(($hora_saida >= $hora_inicial_ds) && ($hora_saida <= $hora_final_ds)){
-                    if($data_usuario_diff->h == 0){
-                        $tempo_usuario_in_ds = $data_usuario_diff->i;
-                    }else{
-                        $tempo_usuario_in_ds = round((($data_usuario_diff->h * 60) + $data_usuario_diff->i));
+                        $tempo_usuario_in += $tempo_atendimento_de;
                     }
+
+                    if($value['entrada'] > "{$data_entrada} {$hora_final_de}"){
+                        
+                        $lacuna_si_out_de = new \DateTime("{$data_entrada} 23:59");
+                        
+                        $usuario_si_diff_de = $usuario_entrada->diff($lacuna_si_out_de);
+                        
+                        $usuario_si_time_de = round((($usuario_si_diff_de->h * 60) + $usuario_si_diff_de->i));
+                        
+                        $tempo_usuario_out += $usuario_si_time_de;
+                    }
+
+                }else{
+                    $data_de_final = new \DateTime("{$data_entrada} 23:59");
+                    $usuario_diff_sa = $usuario_entrada->diff($data_de_final);
+
+                    if($usuario_diff_sa->d > 1){
+                        $usuario_total_sa = round(((($usuario_diff_sa->d * 24) * 60) + $usuario_diff_sa->i));
+                    }else{
+                        $usuario_total_sa = round((($usuario_diff_sa->h * 60) + $usuario_diff_sa->i));
+                    }
+
+                    $tempo_usuario_out += $usuario_total_sa;
                 }
+
+                if($pos_ds !== false){
+
+                    $data_inicial_ds = new \DateTime("{$data_saida} {$hora_inicial_ds}");
+                    $data_final_ds = new \DateTime("{$data_saida} {$hora_final_ds}");
+
+                    $tempo_atendimento_diff_ds = $data_inicial_ds->diff($data_final_ds);
+
+                    $tempo_atendimento_ds = (($tempo_atendimento_diff_ds->h * 60) + $tempo_atendimento_diff_ds->i);
+
+                    if((("{$data_saida} 00:00" < $value['ultimo_registro']) && 
+                        ($value['ultimo_registro'] < "{$data_saida} {$hora_inicial_ds}")) ||
+                        (($value['ultimo_registro'] >= "{$data_saida} {$hora_inicial_ds}") &&
+                        ($value['ultimo_registro'] <= "{$data_saida} 23:59"))){                  
+
+                    if((($value['ultimo_registro'] > "{$data_saida} 00:00") && 
+                        ($value['ultimo_registro'] < "{$data_saida} {$hora_inicial_ds}"))){
+
+                            $lacuna_pi_out_ds = new \DateTime("{$data_saida} 00:00");
+                            $usuario_diff_pi_out_ds = $lacuna_pi_out_ds->diff($usuario_saida);
+
+                            $usuario_pi_time_ds = round((($usuario_diff_pi_out_ds->h * 60) + $usuario_diff_pi_out_ds->i));
+                            
+                            $tempo_usuario_out += $usuario_pi_time_ds;
+                    }else{
+
+                        $lacuna_pi_out_ds = new \DateTime("{$data_saida} 00:00");
+                        $lacuna_pi_out_diff_ds = $lacuna_pi_out_ds->diff($data_inicial_ds);
+                        
+                        $lacuna_pi_out_time_ds = round((($lacuna_pi_out_diff_ds->h * 60) + $lacuna_pi_out_diff_ds->i));
+                        
+                        $tempo_usuario_out += $lacuna_pi_out_time_ds;
+
+
+                        if(($value['ultimo_registro'] >= "{$data_saida} {$hora_inicial_ds}") && 
+                            ($value['ultimo_registro'] <= "{$data_saida} {$hora_final_ds}")){
+
+                                $usuario_in_diff_ds = $usuario_saida->diff($data_inicial_ds);                            
+                                $usuario_in_time_ds = round((($usuario_in_diff_ds->h * 60) + $usuario_in_diff_ds->i));
                                 
+                                $tempo_usuario_in += $usuario_in_time_ds;                            
+                        }
 
-                if(($value['ultimo_registro'] > "{$data_saida} {$hora_final_ds}") && 
-                    ("{$data_saida} 23:59" > $value['ultimo_registro'])){
-                        return 'segundo out ds';
-                    $lacuna_si_out_ds = new \DateTime("{$data_saida} 23:59");
-                    $lacuna_sf_out_ds = new \DateTime("{$data_saida} {$hora_final_ds}");
-                    
-                    $lacuna_sf_diff_ds = $lacuna_si_out_ds->diff($lacuna_sf_out_ds);
+                        if(($value['ultimo_registro'] > "{$data_saida} {$hora_final_ds}") &&
+                            ($value['ultimo_registro'] <= "{$data_saida} 23:59")){
+                                
+                                $usuario_diff_pf_out_ds = $usuario_saida->diff($data_final_ds);
+                                $usuario_pf_time_ds = round((($usuario_diff_pf_out_ds->h * 60) + $usuario_diff_pf_out_ds->i));
 
-                    $tempo_24h_sf_diff_ds = ((24 - intval(floor((($lacuna_sf_out_ds->h * 60) + $lacuna_sf_out_ds->i) / 60))) / 2);
-                    
-                    $usuario_pi_diff_ds = $usuario_entrada->diff($lacuna_sf_out_ds);
-                    
-                    $usuario_pi_time_ds = round((($usuario_pi_diff_ds->h * 60) + $usuario_pi_diff_ds->i));
+                                $tempo_usuario_out += $usuario_pf_time_ds;
+                                $tempo_usuario_in += $tempo_atendimento_ds;
+                        }
+                    }
 
-                    $tempo_usuario_out_ds += $usuario_pi_time_ds;
+                }
+            }else{
+                $usuario_diff_sa = $usuario_entrada->diff($usuario_saida);
+
+                if($usuario_diff_sa->d > 1){
+                    $usuario_total_sa = round(((($usuario_diff_sa->d * 24) * 60) + $usuario_diff_sa->i));
+                }else{
+                    $usuario_total_sa = round((($usuario_diff_sa->h * 60) + $usuario_diff_sa->i));
                 }
 
-                // $tempo_usuario_in = $tempo_usuario_in_de + $tempo_usuario_in_ds;
-                // $tempo_usuario_out = $tempo_usuario_out_de + $tempo_usuario_out_ds;
+                $tempo_usuario_out += $usuario_total_sa;
+                
+            }
 
-                // exit(var_dump($data_usuario_diff));
-                // exit(var_dump($tempo_24h_diff_ds));
-                exit(var_dump(['inde' => $tempo_usuario_in_de, 'inds' =>$tempo_usuario_in_ds, 'outde'=>$tempo_usuario_out_de, 'outds' => $tempo_usuario_out_ds]));
-                // exit(var_dump($tempo_diff_ds));
-                // exit(var_dump([$data_inicial_de, $data_final_de, $data_inicial_ds, $data_final_ds]));
             }
         }
     }
