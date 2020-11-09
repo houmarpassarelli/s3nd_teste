@@ -17,6 +17,14 @@ class ClienteController extends BaseController
         $this->render('cliente/index');
     }
 
+    /**
+     * Método que pega os acessos dos
+     * usuários registrados, calcula
+     * tempo fora e dentro do horário 
+     * de atendimento e retorna
+     * 
+     * @return object
+     */
     public function get()
     {   
         $pos = null;
@@ -220,6 +228,8 @@ class ClienteController extends BaseController
 
             $value['in'] = $tempo_usuario_in;
             $value['out'] = $tempo_usuario_out;
+            $value['entrada'] = date('d/m/Y H:i', strtotime($value['entrada']));
+            $value['ultimo_registro'] = date('d/m/Y H:i', strtotime($value['ultimo_registro']));
 
             $cliente_parsed[] = $value;
         }
@@ -227,9 +237,19 @@ class ClienteController extends BaseController
         return json_encode($cliente_parsed);
     }
 
+    /**
+     * Método que converte o dia da semana
+     * numeral e descrito
+     */
     private function convertweekday($date)
     {
         $day = date('w', strtotime($date));
+
+        /**
+         * 0 - Domingo
+         * ...
+         * 6 - Sábado
+         */
 
         $array = [
             'domingo',

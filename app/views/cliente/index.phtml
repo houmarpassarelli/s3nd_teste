@@ -1,4 +1,67 @@
+<div class="container" id="cliente">
+    <div class="col-12">
+        <div class="row">
+            <div class="col-6">
+                <h4 class="mt-15">Lista de Acessos</h4>
+            </div>
+            <div class="col-6">
+                <a href="/empresa/" class="btn btn-sm btn-primary mt-15" style="float:right;">
+                    Acessar página de Empresa
+                </a>
+            </div>
+        </div>
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>
+                            Código
+                        </th>
+                        <th>
+                            Entrada
+                        </th>
+                        <th>
+                            Último registro
+                        </th>
+                        <th>
+                            Registro de acesso
+                        </th>                    
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="item in userstime">
+                        <td>
+                            <small>
+                                {{ item.codigo }}
+                            </small>
+                        </td>
+                        <td>
+                            <small>
+                                {{ item.entrada }}
+                            </small>
+                        </td>
+                        <td>
+                            <small>
+                                {{ item.ultimo_registro }}
+                            </small>
+                        </td>
+                        <td colspan="2">
+                            <div class="badge badge-success">
+                                Tempo dentro do expediente:                                 
+                                {{ item.in }} minutos                                
+                            </div>
+                            <div class="badge badge-danger">
+                                Tempo fora do expediente:
+                                {{ item.out }} minutos
+                            </div>
+                        </td>
+                    </tr>                    
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
 <?php
     requer(['cliente']);
 ?>
-Cliente view!
+
