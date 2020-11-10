@@ -35,8 +35,8 @@ class ClienteController extends BaseController
         
         foreach($usuarios as $value){
 
-            $value['entrada'] = '2020-11-09 06:30';
-            $value['ultimo_acesso'] = '2020-11-09 20:30';
+            // $value['entrada'] = '2020-11-09 06:30';
+            // $value['ultimo_acesso'] = '2020-11-09 20:30';
 
             $pos_de = array_search($this->convertweekday($value['entrada']), array_column($expediente, 'dia_semana'));
             $pos_ds = array_search($this->convertweekday($value['ultimo_registro']), array_column($expediente, 'dia_semana'));
