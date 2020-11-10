@@ -110,7 +110,7 @@ class Empresa
      * 
      * @return array
      */
-    public function getOfficeExpedient()
+    public static function getOfficeExpedient()
     {
         $sql = "SELECT dia_semana, hora_inicial, hora_final FROM horarios
                 GROUP BY dia_semana, hora_inicial, hora_final

@@ -27,9 +27,14 @@ new Vue({
                     this.updateUserStatus();
                 });
         },
-        updateUserStatus(){
-            if(this.userip && this.usercode){
-                axios.get(this.api + '?acao=ping&code=' + this.usercode);
+        async updateUserStatus(){
+            if(this.userip && this.userip != undefined){
+                if(this.usercode && this.usercode != null && this.usercode != undefined){
+                    await axios.get(this.api + '?acao=ping&code=' + this.usercode);
+                }                
+            }else{
+                this.getUserIp();
+                this.updateUserStatus();
             }
         },
         getUserIp(){

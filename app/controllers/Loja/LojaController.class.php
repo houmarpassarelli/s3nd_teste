@@ -24,7 +24,7 @@ class LojaController extends BaseController
      */
     public function code()
     {
-        return md5(base64_encode(str_replace('.', $_GET['ip'])));
+        return md5(base64_encode(str_replace('.', '', $_GET['ip'])));
     }
 
     /**

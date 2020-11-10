@@ -35,6 +35,9 @@ class ClienteController extends BaseController
         
         foreach($usuarios as $value){
 
+            $value['entrada'] = '2020-11-09 06:30';
+            $value['ultimo_acesso'] = '2020-11-09 20:30';
+
             $pos_de = array_search($this->convertweekday($value['entrada']), array_column($expediente, 'dia_semana'));
             $pos_ds = array_search($this->convertweekday($value['ultimo_registro']), array_column($expediente, 'dia_semana'));
             
@@ -61,15 +64,19 @@ class ClienteController extends BaseController
             $tempo_usuario_in = 0;
             $tempo_usuario_out = 0;
             
-            if($pos_de == $pos_ds){                
+            if($pos_de == $pos_ds){
                 if(($value['entrada'] > "{$data_entrada} 00:00") &&
                     ($value['ultimo_registro'] < "{$data_entrada} {$hora_inicial_ds}")){                        
                         $usuario_pi_time_out = round((($data_usuario_diff->h * 60) + $data_usuario_diff->i));
                         $tempo_usuario_out += $usuario_pi_time_out;
                 }else{
-                    $lacuna_pi_out_diff_ds = $usuario_entrada->diff($data_inicial_ds);                        
-                    $lacuna_pi_out_time_ds = round((($lacuna_pi_out_diff_ds->h * 60) + $lacuna_pi_out_diff_ds->i));                    
-                    $tempo_usuario_out += $lacuna_pi_out_time_ds;
+
+                    $tempo_atendimento_diff_ds = $data_inicial_ds->diff($data_final_ds);
+                    $tempo_atendimento_ds = (($tempo_atendimento_diff_ds->h * 60) + $tempo_atendimento_diff_ds->i);
+
+                    // $lacuna_pi_out_diff_ds = $usuario_entrada->diff($data_inicial_ds);                        
+                    // $lacuna_pi_out_time_ds = round((($lacuna_pi_out_diff_ds->h * 60) + $lacuna_pi_out_diff_ds->i));                    
+                    // $tempo_usuario_out += $lacuna_pi_out_time_ds;
 
                     if(($value['ultimo_registro'] >= "{$data_saida} {$hora_inicial_ds}") && 
                         ($value['ultimo_registro'] <= "{$data_saida} {$hora_final_ds}")){
@@ -91,9 +98,10 @@ class ClienteController extends BaseController
                             $usuario_pf_time_ds = round((($usuario_diff_pf_out_ds->h * 60) + $usuario_diff_pf_out_ds->i));
 
                             $tempo_usuario_out += $usuario_pf_time_ds;
-                            $tempo_usuario_in += $tempo_atendimento_ds;
+                            // $tempo_usuario_in += $tempo_atendimento_ds;
                     }
-                }                
+                }
+                // exit(var_dump(['in' => $tempo_usuario_in, 'out' => $tempo_usuario_out]));                
             }else{
                 
                 $tempo_24h = (24 * 60);
